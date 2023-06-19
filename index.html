@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        table {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <form action="">
+                <input type="text" placeholder="username" name="username">
+                <input type="password" placeholder="password" name="password">
+                <input type="submit" value="submit" class="btn btn-primary btn-login">
+            </form>
+            <h1 class="my-3">Quản lý students</h1>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>phone</th>
+                    <th><a class="btn btn-primary" href="./add.html">add</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+        const API = 'http://localhost:3000/students';
+        const username = document.querySelector('[name="username"]');
+        const password = document.querySelector('[name="password"]');
+        const login = document.querySelector('.btn-login');
+        const table = document.querySelector('table');
+
+
+        // xử lý login
+        login.addEventListener('click', (e) => {
+            // chặn reload trang web
+            e.preventDefault();
+            const APIUsers = "http://localhost:3000/users";
+            // dùng fetch để lấy toàn bộ users
+            fetch(APIUsers,{method: "GET"})
+            // với method GET thì api sẽ trả về chuỗi json dùng json() để chuyển nó về mảng object
+            .then(res => res.json())
+            .then(data => {
+                if(data) {
+                    // dùng hàm find để lấy ra element theo username
+                    const user = data.find(ele => ele.username === username.value);
+
+
+                    // kiểm tra password của user tìm được có trùng với password nhập vào không
+                    if(user?.password === password.value) {
+                        // nếu như trùng thì set display block cho table
+                        table.style.display = "block";
+                        
+                    }
+                    // set lại giá trị cho 2 input
+                    username.value = '';
+                    password.value = '';
+                }
+            })
+        })
+
+
+        // dùng fetch để lấy toàn bộ dữ liệu ở api students đổ vào tbody
+        fetch(API, {method: "GET"})
+        .then(res => res.json())
+        .then(data => {
+            if(data) {
+                const tbody = document.querySelector('tbody');
+                let html = '';
+                // foreach để thêm dữ liệu vào bảng
+                data.forEach(element => {
+                    html += `
+                    <tr class="row-${element.id}">
+                        <td>${element.id}</td>
+                        <td>${element.name}</td>
+                        <td>${element.phone}</td>
+                        <td>
+                            <a class="btn btn-danger" onclick="removeElement(${element.id})">delete</a>
+                            <a class="btn btn-success" href="./edit.html?id=${element.id}">edit</a>
+                        </td>
+                    </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+            }
+        })
+
+        // hàm remove element
+        function removeElement(id) {
+            const check = confirm('Bạn có chắc muốn xóa không');
+
+            if(check) {
+                // api sẽ kèm theo id và method là DELETE
+                fetch(`${API}/${id}`, {method: "DELETE"})
+                .then(res => {
+                    alert('Xóa thành công');
+                    const removeElement = document.querySelector('.row-' + id);
+                    removeElement.remove();
+                })
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h3 class="my-3">Thêm mới</h3>
+        <form action="">
+            <div class="my-3">
+                <lable class="form-lable">name</lable>
+                <input type="text" class="form-control" name="name">
+            </div>
+            <div class="my-3">
+                <lable class="form-lable">phone</lable>
+                <input type="text" class="form-control" name="phone">
+            </div>
+            <div class="my-3">
+                <input type="submit" value="submit" class="btn btn-success">
+            </div>
+        </form>
+    </div>
+
+
+    <script>
+        const API = 'http://localhost:3000/students';
+        const name = document.querySelector('[name="name"]');
+        const phone = document.querySelector('[name="phone"]');
+        const form = document.querySelector('form');
+
+
+        // validate form
+        function validator() {
+            if(name.value.trim() === '') {
+                alert('Tên không được để trống');
+                return false;
+            }
+            if(phone.value.trim() === '') {
+                alert('Phone không được để trống');
+                return false;
+            }
+            return true;
+        }
+
+        // add event cho form
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // tạo object để lưu thông tin trong input
+            if(validator()) {
+                const obj = {
+                name: name.value,
+                phone: phone.value
+                }
+                // dùng method POST để đẩy dữ liệu lên api
+                fetch(API, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    // chuyển object thành chuỗi json
+                    body: JSON.stringify(obj)
+                })
+                .then(res => {
+                    // chuyển hướng về file index
+                    window.location.href = "http://127.0.0.1:5500/index.html";
+                    alert('Thêm thành công');
+                })
+            }
+            })
+        
+    </script>
+</body>
+</html>

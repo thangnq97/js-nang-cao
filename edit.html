@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h3 class="my-3">Sửa thông tin</h3>
+        <form action="">
+            <div class="my-3">
+                <lable class="form-lable">name</lable>
+                <input type="text" class="form-control" name="name">
+            </div>
+            <div class="my-3">
+                <lable class="form-lable">phone</lable>
+                <input type="text" class="form-control" name="phone">
+            </div>
+            <div class="my-3">
+                <input type="submit" value="submit" class="btn btn-success">
+            </div>
+        </form>
+    </div>
+
+
+    <script>
+        const API = 'http://localhost:3000/students';
+        const name = document.querySelector('[name="name"]');
+        const phone = document.querySelector('[name="phone"]');
+        const form = document.querySelector('form');
+
+        // lấy id trên URL
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        // dùng fetch để lấy thông tin của id đã lấy được
+        fetch(`${API}/${id}`, {method: "GET"})
+        .then(res => res.json())
+        .then(data => {
+            if(data) {
+                name.value = data.name;
+                phone.value = data.phone;
+            }
+        })
+
+
+        // lấy thông tin mới và thêm vào api
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const obj = {
+            name: name.value,
+            phone: phone.value
+            }
+
+            fetch(`${API}/${id}`, {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(obj)
+            })
+            .then(res => {
+                window.location.href = "http://127.0.0.1:5500/index.html";
+                alert('Sửa thành công');
+            })
+            })
+        
+    </script>
+</body>
+</html>

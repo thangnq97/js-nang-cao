@@ -1,0 +1,15 @@
+{
+  "users": [
+    {
+      "username": "thangnq",
+      "password": "1234"
+    }
+  ],
+  "students": [
+    {
+      "name": "Nguyen Van AAA",
+      "phone": "0344750590123",
+      "id": 1
+    }
+  ]
+}
